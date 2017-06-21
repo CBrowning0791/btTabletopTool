@@ -3,15 +3,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
-import	javax.swing.*;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.nio.*;
+import java.util.Scanner;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
 
 public class btTabletopTool
 {
 	public static void main(String args[])
 	{
 		toolGui tg;
-		System.out.println("Reactor Online. Sensors Online. Weapons Online.\n");
+		System.out.println("Reactor Online. \nSensors Online.");
 		tg = new toolGui();
 		System.out.println("All systems nominal.");
 	}
@@ -20,14 +24,18 @@ public class btTabletopTool
 class toolGui extends JFrame implements ActionListener
 {
 	JFrame mainFrame;
+	JFrame weaponFrame;
 	JButton diceRollBtn;
 	JButton weaponReferenceBtn;
+	JButton closeWeaponWindow;
 	JTextField diceRollField;
 	JPanel dicePanel;
 	JPanel listPanel;
 	JPanel topButtonPanel;
 	Random rand = new Random();
 	int diceRoll;
+	JTable weaponsTable;
+	JScrollPane weaponScrollPane;
 	JList rollList;
 	DefaultListModel rollListEntries = new DefaultListModel();
 	public toolGui ()
@@ -45,8 +53,8 @@ class toolGui extends JFrame implements ActionListener
 		rollList = new JList(rollListEntries);
 		JScrollPane listPane = new JScrollPane(rollList);
 
-		///////////adding stuff to various panels///////////
-
+		///////////adding stuff to various parts///////////
+		loadLists();
 		dicePanel.add(diceRollField);
 		dicePanel.add(Box.createRigidArea(new Dimension(0,5)));
 		dicePanel.add(diceRollBtn);
@@ -75,6 +83,9 @@ class toolGui extends JFrame implements ActionListener
 		weaponReferenceBtn.setActionCommand("WEAPON");
 		weaponReferenceBtn.addActionListener(this);
 
+		//////////Debugging//////////
+		//System.out.println(Integer.toString(weaponsTable.getColumnCount()));
+
 	}
 
 	public void actionPerformed(ActionEvent e)
@@ -89,8 +100,74 @@ class toolGui extends JFrame implements ActionListener
 							break;
 
 			case "WEAPON":
-
+							weaponGui();
 							break;
 		}
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+	public void weaponGui ()
+	{
+		weaponFrame = new JFrame("Weapon Reference Sheet");
+		weaponScrollPane = new JScrollPane(weaponsTable);
+		weaponsTable.setFillsViewportHeight(true);
+		weaponFrame.add(weaponScrollPane);
+		weaponFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		weaponFrame.setSize(600,300);
+		weaponFrame.setLocationRelativeTo(null);
+		weaponFrame.setVisible(true);
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+	public void loadLists ()
+	{
+		String path = "./data/weapons.txt";
+		Vector wVector = new Vector();
+		Vector colVector = new Vector();
+		Vector vVector = new Vector();
+		colVector.add("Name");
+		colVector.add("Heat");
+		colVector.add("Damage");
+		colVector.add("Min");
+		colVector.add("Short");
+		colVector.add("Med");
+		colVector.add("Long");
+		colVector.add("Ext");
+		colVector.add("Type");
+		try
+		{
+			FileInputStream fis = new FileInputStream(path);
+			BufferedReader in = new BufferedReader(new InputStreamReader(fis));
+			Scanner ws = new Scanner(fis);
+			ws.useDelimiter(";");
+			while(ws.hasNext())
+			{
+				wVector.add(ws.next());
+				if(wVector.lastElement().equals("E")||wVector.lastElement().equals("B")||wVector.lastElement().equals("M"))
+					{
+						vVector.add(wVector.clone());
+						//System.out.println(vVector.size());//Debugging
+						wVector.clear();
+					}
+			}
+			weaponsTable = new JTable(vVector,colVector);
+			ws.close();
+			fis.close();
+			fis.close();
+		}
+		catch(FileNotFoundException fnfe)
+		{
+			System.out.println("Error finding weapons file, is it missing?");
+			System.exit(1);
+		}
+		catch(IOException ioe)
+		{
+			System.out.println("Error opening or closing a file stream");
+			System.exit(1);
+		}
+		System.out.println("Weapons Online.");
+		
 	}
 }
