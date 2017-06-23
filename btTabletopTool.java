@@ -100,8 +100,19 @@ class toolGui extends JFrame implements ActionListener
 							break;
 
 			case "WEAPON":
-							weaponGui();
-							break;
+							if (weaponFrame == null)
+							{
+								weaponGui();
+								break;
+							}
+							else
+							{
+								System.out.println("Window is already open.");
+								weaponFrame.toFront();
+								weaponFrame.repaint();
+							}
+
+							
 		}
 	}
 
