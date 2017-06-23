@@ -9,7 +9,12 @@ import java.nio.*;
 import java.util.Scanner;
 import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
-import javax.sound.sampled;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.AudioInputStream;
 
 public class btTabletopTool
 {
@@ -38,7 +43,9 @@ class toolGui extends JFrame implements ActionListener
 	JTable weaponsTable;
 	JScrollPane weaponScrollPane;
 	JList rollList;
+	Clip soundClip;
 	DefaultListModel rollListEntries = new DefaultListModel();
+
 	public toolGui ()
 	{
 		///////////Creating everything///////////
@@ -75,6 +82,8 @@ class toolGui extends JFrame implements ActionListener
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setSize(500,300);
 		mainFrame.setLocationRelativeTo(null);
+		SoundEffect("./Data/FullStartUpSequence.wav");
+		soundClip.start();
 		mainFrame.setVisible(true);
 
 		///////////adding actionListeners///////////
@@ -104,18 +113,49 @@ class toolGui extends JFrame implements ActionListener
 							if (weaponFrame == null)
 							{
 								weaponGui();
+								SoundEffect("./Data/Weapons_Online.wav");
+								soundClip.start();
 								break;
 							}
 							else
 							{
 								System.out.println("Window is already open.");
 								weaponFrame.toFront();
+								weaponFrame.setVisible(true);
 								weaponFrame.repaint();
 							}
 
 							
 		}
 	}
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+	public void SoundEffect(String audioFile)
+	{
+		File fileName = new File(audioFile);
+		try
+		{
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(fileName);
+			soundClip = AudioSystem.getClip();
+			soundClip.open(audioInputStream);
+		}
+		catch(UnsupportedAudioFileException uAFE)
+		{
+			System.out.println("Audio File in unsupported format.");
+		}
+		catch(IOException iOE)
+		{
+			System.out.println("Error opening audio file");
+		}
+		catch(LineUnavailableException lUE)
+		{
+			System.out.println("Error getting line from audio");
+		}
+
+	}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -125,7 +165,7 @@ class toolGui extends JFrame implements ActionListener
 		weaponScrollPane = new JScrollPane(weaponsTable);
 		weaponsTable.setFillsViewportHeight(true);
 		weaponFrame.add(weaponScrollPane);
-		weaponFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		weaponFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		weaponFrame.setSize(600,300);
 		weaponFrame.setLocationRelativeTo(null);
 		weaponFrame.setVisible(true);
