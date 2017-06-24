@@ -33,7 +33,7 @@ class toolGui extends JFrame implements ActionListener
 	JFrame weaponFrame;
 	JButton diceRollBtn;
 	JButton weaponReferenceBtn;
-	JButton closeWeaponWindow;
+	JButton ratingMRBCButton;
 	JTextField diceRollField;
 	JPanel dicePanel;
 	JPanel listPanel;
@@ -53,6 +53,7 @@ class toolGui extends JFrame implements ActionListener
 		mainFrame = new JFrame("Battletech Tabletop Tool");
 		diceRollBtn = new JButton("Roll Dice");
 		weaponReferenceBtn = new JButton("Weapon Sheet");
+		ratingMRBCButton = new JButton("MRBC Rating");
 		diceRollField = new JTextField(10);
 		dicePanel = new JPanel();
 		dicePanel.setLayout(new BoxLayout(dicePanel, BoxLayout.Y_AXIS));
