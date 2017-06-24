@@ -69,6 +69,7 @@ class toolGui extends JFrame implements ActionListener
 		dicePanel.add(diceRollBtn);
 		listPanel.add(listPane);
 		topButtonPanel.add(weaponReferenceBtn);
+		topButtonPanel.add(ratingMRBCButton);
 		mainFrame.add(dicePanel, BorderLayout.CENTER);
 		mainFrame.add(listPanel, BorderLayout.LINE_END);
 		mainFrame.add(topButtonPanel, BorderLayout.PAGE_START);
@@ -93,6 +94,8 @@ class toolGui extends JFrame implements ActionListener
 		diceRollBtn.addActionListener(this);
 		weaponReferenceBtn.setActionCommand("WEAPON");
 		weaponReferenceBtn.addActionListener(this);
+		ratingMRBCButton.setActionCommand("MRBC");
+		ratingMRBCButton.addActionListener(this);
 
 		//////////Debugging//////////
 		//System.out.println(Integer.toString(weaponsTable.getColumnCount()));
@@ -104,7 +107,8 @@ class toolGui extends JFrame implements ActionListener
 		System.out.println("Action Received: " +  e.getActionCommand()); //Debugging statement
 		switch(e.getActionCommand())
 		{
-			case "ROLL":    diceRoll = rand.nextInt(6)+ 1;
+			case "ROLL":   
+							diceRoll = rand.nextInt(6)+ 1;
 							diceRoll += rand.nextInt(6)+ 1;
 							diceRollField.setText(Integer.toString(diceRoll));
 							rollListEntries.add(0, diceRoll);
@@ -125,6 +129,9 @@ class toolGui extends JFrame implements ActionListener
 								weaponFrame.setVisible(true);
 								weaponFrame.repaint();
 							}
+
+			case "MRBC":
+							break;
 
 							
 		}
